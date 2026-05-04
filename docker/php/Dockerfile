@@ -34,17 +34,28 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+ENV NVM_DIR="/root/.nvm"
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash \
+    && . "$NVM_DIR/nvm.sh" \
+    && nvm install 22 \
+    && nvm use 22
+
 # Instala o Composer
 RUN curl -sLS https://getcomposer.org/installer \
     | php -- --install-dir=/usr/bin/ --filename=composer
 
 ENV COMPOSER_HOME=/tmp/composer
 
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY start-container.sh /usr/local/bin/start-container
+COPY /docker/php/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY /docker/php/start-container.sh /usr/local/bin/start-container
 RUN chmod +x /usr/local/bin/start-container
 
 WORKDIR /var/www/html
+
+COPY /src/package.json package.json
+RUN npm install \
+        && npm run build
 
 EXPOSE 80
 

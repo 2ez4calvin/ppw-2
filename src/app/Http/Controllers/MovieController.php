@@ -37,7 +37,6 @@ class MovieController extends Controller
     public function show(string $id)
     {
         $movie = Movie::findOrFail($id);
-        // Carrega as avaliações com os usuários já incluídos
         $reviews = $movie->review()->with('user')
         ->orderBy('created_at', 'desc')
         ->get();

@@ -1,4 +1,4 @@
-@extends('layouts.app')eic
+@extends('layouts.app')
 
 <h1>{{ $movie->nome }}</h1>
 <div>
