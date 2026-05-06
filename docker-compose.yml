@@ -1,5 +1,4 @@
 services:
-
   nginx:
     image: nginx:alpine
     ports:
@@ -13,8 +12,12 @@ services:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
+    ports:
+      - "5173:5173"
     volumes:
       - ./src:/var/www/html
+      - /var/www/html/node_modules
+      - /var/www/html/vendor
     depends_on:
       - postgres
     environment:
@@ -30,8 +33,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB:       ${DB_DATABASE:-laravel}
-      POSTGRES_USER:     ${DB_USERNAME:-laravel}
+      POSTGRES_DB: ${DB_DATABASE:-laravel}
+      POSTGRES_USER: ${DB_USERNAME:-laravel}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
     volumes:
       - postgres_data:/var/lib/postgresql/data

@@ -1,3 +1,62 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+:root {
+    --bg-base: #FAF8F2;
+    --bg-surface: #ebe6d1;
+    --bg-elevated: #E2DBBF;
+    --accent: #B8860B;
+    --accent-soft: #D4A017;
+    --text-primary: #1A1710;
+    --text-muted: #6B6448;
+    --text-active: #7A5C00;
+
+    --bs-body-bg: var(--bg-base);
+    --bs-body-color: var(--text-primary);
+    --bs-secondary-color: var(--text-muted);
+    --bs-primary: var(--accent);
+    --bs-primary-rgb: 184, 134, 11;
+    --bs-border-color: var(--bg-elevated);
+    --bs-card-bg: var(--bg-surface);
+}
+
+html.dark {
+    --bg-base: #0D0D0F;
+    --bg-surface: #1A1A20;
+    --bg-elevated: #26262E;
+    --accent: #E6B84A;
+    --accent-soft: #F0D080;
+    --text-primary: #FFFFFF;
+    --text-muted: #9A9A9A;
+    --text-active: #e6cf4a;
+
+
+    --bs-body-bg: var(--bg-base);
+    --bs-body-color: var(--text-primary);
+    --bs-secondary-color: var(--text-muted);
+    --bs-primary: var(--accent);
+    --bs-primary-rgb: 230, 184, 74;
+    --bs-border-color: var(--bg-elevated);
+    --bs-card-bg: var(--bg-surface);
+}
+
+body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+}
+
+.navbar {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    --bs-nav-link-color: var(--text-primary);
+    --bs-nav-link-hover-color: var(--accent) ;
+    --bs-navbar-active-color: var(--text-active);
+    --bs-navbar-brand-color: var(--text-primary);
+    --bs-navbar-brand-hover-color: var(--accent);
+}
+
+.hiddenNavbar {
+    display: none;
+}

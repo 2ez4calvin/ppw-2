@@ -1,0 +1,3 @@
+#Tira o node_modules do build do docker, para evitar erros de permissão e arquivos desnecessários no container
+src/node_modules
+node_modules
