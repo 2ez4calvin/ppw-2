@@ -11,7 +11,7 @@
     --accent-soft: #D4A017;
     --text-primary: #1A1710;
     --text-muted: #6B6448;
-    --text-active: #7A5C00;
+    --text-active: #c29203;
 
     --bs-body-bg: var(--bg-base);
     --bs-body-color: var(--text-primary);
@@ -49,14 +49,51 @@ body {
 
 .navbar {
     background-color: var(--bg-surface);
-    color: var(--text-primary);
     --bs-nav-link-color: var(--text-primary);
-    --bs-nav-link-hover-color: var(--accent) ;
+    --bs-nav-link-hover-color: var(--accent);
     --bs-navbar-active-color: var(--text-active);
     --bs-navbar-brand-color: var(--text-primary);
     --bs-navbar-brand-hover-color: var(--accent);
+
+    .navbar-nav .nav-link {
+        color: var(--text-primary);
+
+        &.active {
+            color: var(--text-active);
+        }
+
+        &:hover {
+            color: var(--accent);
+        }
+    }
+}
+
+.navbar .collapse {
+    visibility: visible;
 }
 
 .hiddenNavbar {
     display: none;
+}
+
+.app-container {
+    max-width: 860px;
+}
+
+.footer {
+    background-color: var(--bg-surface);
+    border-top: 1px solid var(--bg-elevated);
+    padding: 1.5rem 0;
+    box-shadow: 0 -1px 8px var(--shadow-color);
+    transition: background-color var(--transition), border-color var(--transition);
+    color: var(--text-primary);
+
+    .nav-link {
+        color: var(--text-primary);
+        transition: color var(--transition);
+
+        &:hover {
+            color: var(--accent);
+        }
+    }
 }
