@@ -5,13 +5,17 @@
 
 :root {
     --bg-base: #FAF8F2;
-    --bg-surface: #ebe6d1;
+    --bg-surface: #F0ECD9;
     --bg-elevated: #E2DBBF;
     --accent: #B8860B;
     --accent-soft: #D4A017;
+    --accent-hover: #9a6f09;
     --text-primary: #1A1710;
     --text-muted: #6B6448;
-    --text-active: #c29203;
+    --shadow-color: rgba(90, 70, 10, 0.10);
+    --shadow-card: 0 2px 16px var(--shadow-color);
+    --radius: 10px;
+    --transition: 200ms ease;
 
     --bs-body-bg: var(--bg-base);
     --bs-body-color: var(--text-primary);
@@ -28,10 +32,10 @@ html.dark {
     --bg-elevated: #26262E;
     --accent: #E6B84A;
     --accent-soft: #F0D080;
+    --accent-hover: #f5c84e;
     --text-primary: #FFFFFF;
     --text-muted: #9A9A9A;
-    --text-active: #e6cf4a;
-
+    --shadow-color: rgba(0, 0, 0, 0.35);
 
     --bs-body-bg: var(--bg-base);
     --bs-body-color: var(--text-primary);
@@ -77,7 +81,13 @@ body {
 }
 
 .app-container {
-    max-width: 860px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    max-height: 100vh;
+    flex: 1;
+    padding-top: 56px;
 }
 
 .footer {
@@ -89,11 +99,84 @@ body {
     color: var(--text-primary);
 
     .nav-link {
-        color: var(--text-primary);
+        color: var(--text-muted);
         transition: color var(--transition);
 
         &:hover {
             color: var(--accent);
         }
+    }
+}
+
+.btn-accent {
+    background-color: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    letter-spacing: 0.01em;
+    transition: background-color var(--transition), transform 0.12s ease;
+    text-decoration: none;
+
+    &:hover {
+        background-color: var(--accent-hover);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .btn-icon {
+        font-size: 1rem;
+        line-height: 1;
+    }
+}
+
+.form-login {
+    background-color: var(--bg-surface);
+}
+
+.input-custom {
+    border: 2px solid var(--text-primary);
+    border-radius: 0.375rem;
+}
+
+
+.input-custom:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.input-checkbox {
+    border: 2px solid var(--text-primary);
+    border-radius: 0.25rem;
+    background-color: transparent;
+    transition: background-color var(--transition), border-color var(--transition);
+
+    &:checked {
+        background-color: var(--accent);
+        border-color: var(--accent);
+    }
+    &:hover {
+        border-color: var(--accent);
+    }
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px var(--accent-soft);
+        background-color: var(--accent);
+    }
+    &:checked:hover {
+        background-color: var(--accent-hover);
+        border-color: var(--accent-hover);
+    }
+
+    &:checked:focus {
+        background-color: var(--accent-hover);
+        border-color: var(--accent-hover);
+        box-shadow: 0 0 0 2px var(--accent-soft);
     }
 }
