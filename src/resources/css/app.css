@@ -142,6 +142,7 @@ body {
 .input-custom {
     border: 2px solid var(--text-primary);
     border-radius: 0.375rem;
+    background-color: var(--bg-elevated);
 }
 
 
@@ -178,5 +179,22 @@ body {
         background-color: var(--accent-hover);
         border-color: var(--accent-hover);
         box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+}
+
+.dropdown-menu{
+    background-color: var(--bg-surface);
+    border: 1px solid var(--bg-elevated);
+    box-shadow: var(--shadow-card);
+    color: var(--text-primary);
+
+    .dropdown-item {
+        color: var(--text-primary);
+        transition: background-color var(--transition), color var(--transition);
+
+        &:hover {
+            background-color: var(--accent-soft);
+           
+        }
     }
 }
