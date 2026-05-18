@@ -80,7 +80,7 @@ body {
     display: none;
 }
 
-.app-container {
+.container-breeze {
     display: flex;
     justify-content: center;
     align-items: center;

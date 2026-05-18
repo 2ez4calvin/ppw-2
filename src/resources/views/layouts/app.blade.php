@@ -15,7 +15,7 @@
 <body>
     @include('partials.header')
 
-    <main class="app-container">
+    <main>
         @yield('conteudo')
     </main>
 

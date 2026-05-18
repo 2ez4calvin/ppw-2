@@ -2,6 +2,7 @@
 @section('titulo', 'Login')
 
 @section('conteudo')
+    <div class="container-breeze">
     <div class="container-md ms-auto form-login justify-content-center align-items-center border rounded p-4 col-4">
         <h2 class="text-center mb-2">Login</h3>
         <form method="POST" action="{{ route('login') }}">
@@ -39,5 +40,6 @@
                 </x-primary-button>
             </div>
         </form>
+    </div>
     </div>
 @endsection

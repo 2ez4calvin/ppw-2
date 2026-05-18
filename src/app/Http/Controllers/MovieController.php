@@ -12,7 +12,9 @@ class MovieController extends Controller
      */
     public function index()
     {
-        //
+        $filmes = Movie::orderBy('nome')->paginate(1);
+
+        return view('filmes.index', compact('filmes'));
     }
 
     /**

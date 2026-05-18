@@ -2,6 +2,7 @@
 @section('titulo', 'Redefinir Senha')
 
 @section('conteudo')
+    <div class="container-breeze">
     <div class="container-md ms-auto form-login justify-content-center align-items-center border rounded p-4 col-4">
         <h2 class="text-center mb-2">Redefinir Senha</h2>
 
@@ -41,5 +42,6 @@
                 </x-primary-button>
             </div>
         </form>
+    </div>
     </div>
 @endsection
