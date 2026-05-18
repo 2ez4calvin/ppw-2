@@ -162,14 +162,17 @@ body {
         background-color: var(--accent);
         border-color: var(--accent);
     }
+
     &:hover {
         border-color: var(--accent);
     }
+
     &:focus {
         outline: none;
         box-shadow: 0 0 0 2px var(--accent-soft);
         background-color: var(--accent);
     }
+
     &:checked:hover {
         background-color: var(--accent-hover);
         border-color: var(--accent-hover);
@@ -182,7 +185,7 @@ body {
     }
 }
 
-.dropdown-menu{
+.dropdown-menu {
     background-color: var(--bg-surface);
     border: 1px solid var(--bg-elevated);
     box-shadow: var(--shadow-card);
@@ -194,7 +197,16 @@ body {
 
         &:hover {
             background-color: var(--accent-soft);
-           
+
         }
     }
+}
+
+.card {
+    width: 260px;
+    background: var(--bg-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--bg-elevated);
+    overflow: hidden;
 }
