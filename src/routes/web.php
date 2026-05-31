@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\MovieController;
+use App\Http\Controllers\StudioController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -8,6 +8,7 @@ Route::get('/', function () {return view('home');
 })->name('home');
 
 Route::resource('generos', GenreController::class);
+Route::resource('estudios', StudioController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

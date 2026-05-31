@@ -30,7 +30,7 @@ class GenreController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-        'nome' => 'required|string|max:255|unique:genres,nome',
+        'nome' => 'required|string|max:45|unique:genres,nome',
     ]);
 
     Genre::create(['nome' => $request->nome]);
@@ -63,7 +63,7 @@ class GenreController extends Controller
     {
         $genre = Genre::findOrFail($id);
         $request->validate([
-            'nome' => 'required|string|max:255|unique:genres,nome,' . $genre->id,
+            'nome' => 'required|string|max:45|unique:genres,nome,' . $genre->id,
         ]);
 
         $genre->update(['nome' => $request->nome]);

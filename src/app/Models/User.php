@@ -33,12 +33,6 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
-    public function profile_image():HasOne
-    {
-        return $this->hasOne(Profile_image::class);
-    }
-    
-
     /**
      * The attributes that should be hidden for serialization.
      *
