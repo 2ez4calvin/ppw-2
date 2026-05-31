@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Studio;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 class StudioController extends Controller
 {
     /**
@@ -30,13 +31,50 @@ class StudioController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-        'nome' => 'required|string|max:45|unique:studios,nome',
-        'local' => 'required|string|max:45',
-    ]);
+            'nome' => 'required|string|max:45|unique:studios,nome',
+            'local' => 'required|string|max:45',
+            'imagens' => 'nullable|array',
+            'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
 
-    Studio::create(['nome' => $request->nome, 'local' => $request->local]);
+        $arquivosSalvos = [];
 
-    return redirect()->route('estudios.index')->with('sucesso', 'Estúdio criado!');
+        try {
+            DB::transaction(function () use ($request, &$arquivosSalvos) {
+                
+                // Cria o Estúdio
+                $studio = Studio::create([
+                    'nome' => $request->nome, 
+                    'local' => $request->local
+                ]);
+
+                if ($request->hasFile('imagens')) {
+                    foreach ($request->file('imagens') as $arquivo) {
+                        
+                        $caminho = $arquivo->store('studios', 'public');
+                        $arquivosSalvos[] = $caminho;
+
+                        $novaImagem = \App\Models\Image::create([
+                            'caminho' => $caminho,
+                            'nome' => $arquivo->getClientOriginalName()
+                        ]);
+
+                        // Cria o vínculo na tabela pivot 'studio_image' 
+                        $studio->image()->attach($novaImagem->id);
+                    }
+                }
+            });
+
+            return redirect()->route('estudios.index')->with('sucesso', 'Estúdio criado com sucesso!');
+
+        } catch (\Exception $e) {
+            // Remoção de arquivos caso haja falha
+            foreach ($arquivosSalvos as $caminho) {
+                Storage::disk('public')->delete($caminho);
+            }
+
+            return back()->withInput()->withErrors(['imagens' => 'Falha ao salvar o estúdio. O upload foi revertido. Erro: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -63,14 +101,70 @@ class StudioController extends Controller
     public function update(Request $request, string $id)
     {
         $studio = Studio::findOrFail($id);
+
+        // 1. Validação (garantindo que valide contra a tabela correta 'studio_images')
         $request->validate([
             'nome' => 'required|string|max:45|unique:studios,nome,' . $studio->id,
             'local' => 'required|string|max:45',
+            'remover_imagens' => 'nullable|array',
+            'remover_imagens.*' => 'exists:images,id', // Verifica se o ID da imagem realmente existe
+            'imagens' => 'nullable|array',
+            'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $studio->update(['nome' => $request->nome, 'local' => $request->local]);
+        $arquivosNovosSalvos = [];
 
-        return redirect()->route('estudios.index')->with('sucesso', 'Estúdio atualizado!');
+        try {
+            DB::transaction(function () use ($request, $studio, &$arquivosNovosSalvos) {
+                
+                // Atualiza os dados de texto do Estúdio
+                $studio->update([
+                    'nome' => $request->nome,
+                    'local' => $request->local
+                ]);
+
+                //PRocessamento das iamgens
+                if ($request->has('remover_imagens') && is_array($request->remover_imagens)) {
+                    foreach ($request->remover_imagens as $imageId) {
+                        
+                        $imagem = \App\Models\Image::find($imageId);
+                        
+                        if ($imagem) {
+                            if (Storage::disk('public')->exists($imagem->caminho)) {
+                                Storage::disk('public')->delete($imagem->caminho);
+                            }
+                            
+                            $studio->image()->detach($imageId);
+                            
+                            $imagem->delete();
+                        }
+                    }
+                }
+
+                if ($request->hasFile('imagens')) {
+                    foreach ($request->file('imagens') as $arquivo) {
+                        
+                        $caminho = $arquivo->store('studios', 'public');
+                        $arquivosNovosSalvos[] = $caminho; 
+
+                        $novaImagem = \App\Models\Image::create([
+                            'caminho' => $caminho,
+                            'nome' => $arquivo->getClientOriginalName()
+                        ]);
+
+                        $studio->image()->attach($novaImagem->id);
+                    }
+                }
+            });
+
+            return redirect()->route('estudios.index')->with('sucesso', 'Estúdio atualizado com sucesso!');
+
+        } catch (\Exception $e) {
+            foreach ($arquivosNovosSalvos as $caminho) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($caminho);
+            }
+            return back()->withInput()->withErrors(['imagens' => 'Falha ao atualizar. Erro: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -79,8 +173,28 @@ class StudioController extends Controller
     public function destroy(string $id)
     {
         $studio = Studio::findOrFail($id);
-        $studio->delete();
 
-        return redirect()->route('estudios.index')->with('sucesso', 'Estúdio removido!');
+        try {
+            DB::transaction(function () use ($studio) {
+                // 4. Limpeza no destroy: loop para excluir arquivos físicos e lógicos (Regra 4 da Aula 9)
+                foreach ($studio->image as $imagem) {
+                    // Remove o arquivo físico da pasta storage
+                    Storage::disk('public')->delete($imagem->caminho);
+                    // Remove o registro da tabela 'images'
+                    $imagem->delete();
+                }
+
+                // Remove os vínculos da tabela pivot
+                $studio->image()->detach();
+                
+                // Exclui o estúdio
+                $studio->delete();
+            });
+
+            return redirect()->route('estudios.index')->with('sucesso', 'Estúdio e suas respectivas imagens foram removidos!');
+
+        } catch (\Exception $e) {
+            return redirect()->route('estudios.index')->with('erro', 'Erro ao tentar remover o estúdio.');
+        }
     }
 }

@@ -12,16 +12,12 @@
         </div>
 
         <div class="p-4 caixa">
-            <form action="{{ route('estudios.store') }}" method="POST">
+            <form action="{{ route('estudios.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="mb-3">
                     <label for="nome" class="form-label fw-semibold">Nome</label>
-                    <input
-                        type="text"
-                        id="nome"
-                        name="nome"
-                        value="{{ old('nome') }}"
+                    <input type="text" id="nome" name="nome" value="{{ old('nome') }}"
                         class="form-control input-custom @error('nome') is-invalid @enderror">
                     @error('nome')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -29,14 +25,26 @@
                 </div>
                 <div class="mb-3">
                     <label for="local" class="form-label fw-semibold">Local</label>
-                    <input
-                        type="text"
-                        id="local"
-                        name="local"
-                        value="{{ old('local') }}"
+                    <input type="text" id="local" name="local" value="{{ old('local') }}"
                         class="form-control input-custom @error('local') is-invalid @enderror">
                     @error('local')
                         <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- 2. ADICIONE O CAMPO MULTIPLO DE IMAGENS ABAIXO --}}
+                <div class="mb-3">
+                    <label for="imagens" class="form-label fw-semibold">Imagens do Estúdio (Opcional)</label>
+                    <input type="file" id="imagens" name="imagens[]" multiple accept="image/*"
+                        class="form-control input-custom @error('imagens') is-invalid @enderror @error('imagens.*') is-invalid @enderror">
+
+                    {{-- Erro caso o array geral falhe --}}
+                    @error('imagens')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                    {{-- Erro caso alguma imagem específica dentro do array viole as regras --}}
+                    @error('imagens.*')
+                        <div class="invalid-feedback">Cada arquivo deve ser uma imagem válida (jpg, png, webp) de até 2MB.</div>
                     @enderror
                 </div>
 

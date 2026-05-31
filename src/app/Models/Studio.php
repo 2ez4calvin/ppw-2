@@ -14,7 +14,7 @@ class Studio extends Model
 
     public function image():BelongsToMany
     {
-        return $this->belongsToMany(Image::class, 'studio_image');
+        return $this->belongsToMany(Image::class, 'studio_images');
     }
 
     public function movie():BelongsToMany
