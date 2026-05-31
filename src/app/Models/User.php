@@ -24,7 +24,8 @@ class User extends Authenticatable
         'email',
         'name',
         'password',
-        'is_admin',    
+        'is_admin',
+        'avatar',
     ];
 
     public function review():HasMany

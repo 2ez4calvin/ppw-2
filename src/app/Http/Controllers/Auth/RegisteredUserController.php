@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class RegisteredUserController extends Controller
 {
@@ -34,17 +36,37 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $caminho = null;
 
-        event(new Registered($user));
+        if ($request->hasFile('avatar')) {
+            // Salva no disco 'public' com nome aleatório para evitar colisões
+            $caminho = $request->file('avatar')->store('avatars', 'public'); 
+        }
 
-        Auth::login($user);
+        try {
+            DB::transaction(function () use ($request, $caminho) {
+                
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'avatar' => $caminho, // Salva o caminho relativo
+                ]);
+
+                event(new Registered($user));
+                Auth::login($user);
+            });
+
+        } catch (\Exception $e) {
+            if ($caminho) {
+                Storage::disk('public')->delete($caminho);
+            }
+            
+            return back()->withInput()->withErrors(['avatar' => 'Erro ao salvar o usuário. Tente novamente.']);
+        }
 
         return redirect(route('dashboard', absolute: false));
     }

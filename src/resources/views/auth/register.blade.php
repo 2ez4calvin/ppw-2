@@ -5,7 +5,7 @@
     <div class="container-breeze">
         <div class="container-md ms-auto form-login justify-content-center align-items-center border rounded p-4 col-4">
             <h2 class="text-center mb-2">Registro</h2>
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                 @csrf
 
                 <!-- Nome -->
@@ -14,6 +14,13 @@
                     <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
                         autofocus autocomplete="name" />
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                </div>
+
+                <div class="mt-4">
+                    <x-input-label for="avatar" :value="__('Foto de Perfil')" />
+                    <x-text-input id="avatar" class="block mt-1 w-full" type="file" name="avatar"
+                        accept="image/jpeg,image/png,image/webp" required />
+                    <x-input-error :messages="$errors->get('avatar')" class="mt-2" />
                 </div>
 
                 <!-- E-mail -->
