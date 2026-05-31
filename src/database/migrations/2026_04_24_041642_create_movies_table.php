@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('classificacao', 45);
             $table->text('sinopse');
             $table->timestamps();
+
+            $table->foreignId('studio_id')->constrained()->onDelete('cascade');
+
         });
     }
 

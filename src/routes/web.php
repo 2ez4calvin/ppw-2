@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\StudioController;
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PersonController;
@@ -11,6 +12,7 @@ Route::get('/', function () {return view('home');
 Route::resource('generos', GenreController::class);
 Route::resource('estudios', StudioController::class);
 Route::resource('pessoas', PersonController::class);
+Route::resource('filmes', MovieController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

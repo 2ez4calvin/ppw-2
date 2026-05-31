@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Movie extends Model
 {
@@ -14,42 +15,44 @@ class Movie extends Model
         'data_lancamento',
         'classificacao',
         'sinopse',
+        'studio_id'
+
     ];
-    public function actor():BelongsToMany
+    public function actors():BelongsToMany
     {
-        return $this->belongsToMany(Actor::class, 'actor_movie');
+        return $this->belongsToMany(Actor::class, 'actor_movies');
     }
 
-    public function director():BelongsToMany
+    public function directors():BelongsToMany
     {
-        return $this->belongsToMany(Director::class, 'director_movie');
+        return $this->belongsToMany(Director::class, 'director_movies');
     }
 
-    public function producer():BelongsToMany
+    public function producers():BelongsToMany
     {
         return $this->belongsToMany(Producer::class, 'producer_movies');
     }
-    public function writer():BelongsToMany
+    public function writers():BelongsToMany
     {
         return $this->belongsToMany(Writer::class, 'writer_movies');
     }
 
-    public function genre():BelongsToMany
+    public function genres():BelongsToMany
     {
         return $this->belongsToMany(Genre::class, 'movie_genres');
     }
 
-    public function studio():BelongsToMany
+    public function studio():BelongsTo
     {
-        return $this->belongsToMany(Studio::class, 'studio_movies');
+        return $this->belongsTo(Studio::class);
     }
 
-    public function image():BelongsToMany
+    public function images():BelongsToMany
     {
         return $this->belongsToMany(Image::class, 'movie_images');
     }
 
-    public function review():HasMany
+    public function reviews():HasMany
     {
         return $this->hasMany(Review::class);
     }
