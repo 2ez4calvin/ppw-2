@@ -19,6 +19,6 @@ class Writer extends Model
 
     public function movie():BelongsToMany
     {
-        return $this->belongsToMany(Movie::class, 'writer_movie');
+        return $this->belongsToMany(Movie::class, 'writer_movies');
     }
 }

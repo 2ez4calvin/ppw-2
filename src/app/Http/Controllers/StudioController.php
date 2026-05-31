@@ -6,6 +6,8 @@ use App\Models\Studio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Image;
+
 class StudioController extends Controller
 {
     /**
@@ -54,7 +56,7 @@ class StudioController extends Controller
                         $caminho = $arquivo->store('studios', 'public');
                         $arquivosSalvos[] = $caminho;
 
-                        $novaImagem = \App\Models\Image::create([
+                        $novaImagem = Image::create([
                             'caminho' => $caminho,
                             'nome' => $arquivo->getClientOriginalName()
                         ]);
@@ -102,7 +104,6 @@ class StudioController extends Controller
     {
         $studio = Studio::findOrFail($id);
 
-        // 1. Validação (garantindo que valide contra a tabela correta 'studio_images')
         $request->validate([
             'nome' => 'required|string|max:45|unique:studios,nome,' . $studio->id,
             'local' => 'required|string|max:45',
@@ -127,7 +128,7 @@ class StudioController extends Controller
                 if ($request->has('remover_imagens') && is_array($request->remover_imagens)) {
                     foreach ($request->remover_imagens as $imageId) {
                         
-                        $imagem = \App\Models\Image::find($imageId);
+                        $imagem = Image::find($imageId);
                         
                         if ($imagem) {
                             if (Storage::disk('public')->exists($imagem->caminho)) {
@@ -147,7 +148,7 @@ class StudioController extends Controller
                         $caminho = $arquivo->store('studios', 'public');
                         $arquivosNovosSalvos[] = $caminho; 
 
-                        $novaImagem = \App\Models\Image::create([
+                        $novaImagem = Image::create([
                             'caminho' => $caminho,
                             'nome' => $arquivo->getClientOriginalName()
                         ]);
@@ -161,7 +162,7 @@ class StudioController extends Controller
 
         } catch (\Exception $e) {
             foreach ($arquivosNovosSalvos as $caminho) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($caminho);
+                Storage::disk('public')->delete($caminho);
             }
             return back()->withInput()->withErrors(['imagens' => 'Falha ao atualizar. Erro: ' . $e->getMessage()]);
         }

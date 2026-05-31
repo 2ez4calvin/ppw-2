@@ -20,6 +20,6 @@ class Producer extends Model
 
     public function movie():BelongsToMany
     {
-        return $this->belongsToMany(Movie::class, 'producer_movie');
+        return $this->belongsToMany(Movie::class, 'producer_movies');
     }
 }

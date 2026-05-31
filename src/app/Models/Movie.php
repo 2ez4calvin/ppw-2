@@ -27,26 +27,26 @@ class Movie extends Model
 
     public function producer():BelongsToMany
     {
-        return $this->belongsToMany(Producer::class, 'producer_movie');
+        return $this->belongsToMany(Producer::class, 'producer_movies');
     }
     public function writer():BelongsToMany
     {
-        return $this->belongsToMany(Writer::class, 'writer_movie');
+        return $this->belongsToMany(Writer::class, 'writer_movies');
     }
 
     public function genre():BelongsToMany
     {
-        return $this->belongsToMany(Genre::class, 'movie_genre');
+        return $this->belongsToMany(Genre::class, 'movie_genres');
     }
 
     public function studio():BelongsToMany
     {
-        return $this->belongsToMany(Studio::class, 'studio_movie');
+        return $this->belongsToMany(Studio::class, 'studio_movies');
     }
 
     public function image():BelongsToMany
     {
-        return $this->belongsToMany(Image::class, 'movie_image');
+        return $this->belongsToMany(Image::class, 'movie_images');
     }
 
     public function review():HasMany

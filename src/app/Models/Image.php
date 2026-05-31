@@ -14,7 +14,7 @@ class Image extends Model
 
     public function person():BelongsToMany
     {
-        return $this->belongsToMany(Person::class,  'person_image');
+        return $this->belongsToMany(Person::class,  'person_images');
     }
 
     public function studio():BelongsToMany
@@ -24,6 +24,6 @@ class Image extends Model
 
     public function movie():BelongsToMany
     {
-        return $this->belongsToMany(Movie::class, 'movie_image');
+        return $this->belongsToMany(Movie::class, 'movie_images');
     }
 }

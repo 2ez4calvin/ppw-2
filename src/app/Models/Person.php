@@ -38,7 +38,7 @@ class Person extends Model
 
     public function image():BelongsToMany
     {
-        return $this->belongsToMany(Image::class, 'person_image');
+        return $this->belongsToMany(Image::class, 'person_images');
     }
 
 
