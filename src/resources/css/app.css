@@ -7,11 +7,33 @@
     --bg-base: #FAF8F2;
     --bg-surface: #F0ECD9;
     --bg-elevated: #E2DBBF;
+
     --accent: #B8860B;
     --accent-soft: #D4A017;
     --accent-hover: #9a6f09;
+
     --text-primary: #1A1710;
+    --text-primary-invertido: #ffffff;
     --text-muted: #6B6448;
+    --text-disabled: #9A9278;
+
+    --color-error: #C9603F;
+    --color-error-bg: #FAF0ED;
+    --color-error-border: #E8937D;
+
+    --color-success: #5A7A2E;
+    --color-success-bg: #EFF4E8;
+    --color-success-border: #8FAF5A;
+
+    --color-warning: #A07C10;
+    --color-warning-bg: #FDF6E3;
+    --color-warning-border: #E8C44A;
+
+    --color-info: #3D6B8C;
+    --color-info-hover: #7A9FBF;
+    --color-info-bg: #EBF0F5;
+    --color-info-border: #7A9FBF;
+
     --shadow-color: rgba(90, 70, 10, 0.10);
     --shadow-card: 0 2px 16px var(--shadow-color);
     --radius: 10px;
@@ -24,17 +46,47 @@
     --bs-primary-rgb: 184, 134, 11;
     --bs-border-color: var(--bg-elevated);
     --bs-card-bg: var(--bg-surface);
+    --bs-danger: var(--color-error);
+    --bs-danger-rgb: 201, 96, 63;
+    --bs-success: var(--color-success);
+    --bs-success-rgb: 90, 122, 46;
+    --bs-warning: var(--color-warning);
+    --bs-warning-rgb: 160, 124, 16;
+    --bs-info: var(--color-info);
+    --bs-info-rgb: 61, 107, 140;
 }
 
 html.dark {
     --bg-base: #0D0D0F;
     --bg-surface: #1A1A20;
     --bg-elevated: #26262E;
+
     --accent: #E6B84A;
     --accent-soft: #F0D080;
     --accent-hover: #f5c84e;
+
     --text-primary: #FFFFFF;
+    --text-primary-invertido: #1A1710;
     --text-muted: #9A9A9A;
+    --text-disabled: #6B6450;
+
+    --color-error: #E8937D;
+    --color-error-bg: #3A1A14;
+    --color-error-border: #C9603F;
+
+    --color-success: #8FAF5A;
+    --color-success-bg: #1A2610;
+    --color-success-border: #5A7A2E;
+
+    --color-warning: #F7E4A8;
+    --color-warning-bg: #2E2206;
+    --color-warning-border: #A07C10;
+
+    --color-info: #7A9FBF;
+    --color-info-hover: #3D6B8C;
+    --color-info-bg: #0E1E2A;
+    --color-info-border: #3D6B8C;
+
     --shadow-color: rgba(0, 0, 0, 0.35);
 
     --bs-body-bg: var(--bg-base);
@@ -44,6 +96,14 @@ html.dark {
     --bs-primary-rgb: 230, 184, 74;
     --bs-border-color: var(--bg-elevated);
     --bs-card-bg: var(--bg-surface);
+    --bs-danger: var(--color-error);
+    --bs-danger-rgb: 232, 147, 125;
+    --bs-success: var(--color-success);
+    --bs-success-rgb: 143, 175, 90;
+    --bs-warning: var(--color-warning);
+    --bs-warning-rgb: 247, 228, 168;
+    --bs-info: var(--color-info);
+    --bs-info-rgb: 122, 159, 191;
 }
 
 body {
@@ -76,6 +136,16 @@ body {
     visibility: visible;
 }
 
+.table {
+    --bs-table-color: var(--text-primary);
+    --bs-table-bg: transparent;
+    --bs-table-hover-bg: var(--bg-elevated);
+    --bs-table-border-color: var(--bg-elevated);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
 .hiddenNavbar {
     display: none;
 }
@@ -88,6 +158,12 @@ body {
     max-height: 100vh;
     flex: 1;
     padding-top: 56px;
+}
+
+.container-principal {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .footer {
@@ -110,7 +186,35 @@ body {
 
 .btn-accent {
     background-color: var(--accent);
-    color: #fff;
+    color: var(--text-primary);
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+
+    &:hover {
+        background-color: var(--accent-hover);
+        color: var(--text-primary);
+        transform: translateY(-1px);
+        transition: background-color var(--transition), transform 0.22s ease;
+        transform: scale(1.05);
+    }
+
+    .btn-icon {
+        font-size: 1rem;
+        line-height: 1;
+    }
+}
+
+.btn-info {
+    background-color: var(--color-info);
+    color: var(--text-primary);
     border: none;
     border-radius: var(--radius);
     padding: 0.5rem 1.1rem;
@@ -124,9 +228,39 @@ body {
     text-decoration: none;
 
     &:hover {
-        background-color: var(--accent-hover);
-        color: #fff;
+        background-color: var(--color-info-hover);
+        color: var(--text-primary);
         transform: translateY(-1px);
+        transition: background-color var(--transition), transform 0.22s ease;
+        transform: scale(1.05);
+    }
+
+    .btn-icon {
+        font-size: 1rem;
+        line-height: 1;
+    }
+}
+
+.btn-remover {
+    background-color: var(--color-error);
+    color: var(--text-primary);
+    border-radius: var(--radius);
+    font-weight: 600;
+    border: none;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: background-color var(--transition), transform 0.12s ease;
+    text-decoration: none;
+
+    &:hover {
+        background-color: var(--color-error-border);
+        color: var(--text-primary);
+        transform: translateY(-1px);
+        transition: background-color var(--transition), transform 0.22s ease;
+        transform: scale(1.05);
     }
 
     .btn-icon {
@@ -197,7 +331,6 @@ body {
 
         &:hover {
             background-color: var(--accent-soft);
-
         }
     }
 }
@@ -209,4 +342,52 @@ body {
     box-shadow: var(--shadow-card);
     border: 1px solid var(--bg-elevated);
     overflow: hidden;
+}
+
+.pagination {
+    --bs-pagination-color: var(--text-primary);
+    --bs-pagination-bg: var(--bg-elevated);
+    --bs-pagination-border-color: var(--bg-elevated);
+
+    --bs-pagination-hover-color: var(--text-primary-invertido);
+    --bs-pagination-hover-bg: var(--accent-soft);
+    --bs-pagination-hover-border-color: var(--accent-soft);
+
+    --bs-pagination-active-color: var(--text-primary-invertido);
+    --bs-pagination-active-bg: var(--accent);
+    --bs-pagination-active-border-color: var(--accent);
+
+    --bs-pagination-disabled-color: var(--text-secondary);
+    --bs-pagination-disabled-bg: var(--bg-elevated);
+    --bs-pagination-disabled-border-color: var(--bg-elevated);
+}
+
+th {
+    color: var(--text-primary);
+
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.85rem 1.25rem;
+}
+
+td {
+    padding: 0.85rem 1.25rem;
+    color: var(--text-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text-primary);
+}
+
+.caixa {
+    background-color: var(--bg-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--bg-elevated);
 }

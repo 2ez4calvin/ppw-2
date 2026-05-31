@@ -16,7 +16,7 @@ const isDarkInicial = temaSalvo === 'dark';
 
 document.documentElement.classList.toggle('dark', isDarkInicial);
 iconeEscuro.classList.toggle('hiddenNavbar', isDarkInicial);
-iconeClaro.classList.toggle('hiddenNavbar', !isDarkInicial); 
+iconeClaro.classList.toggle('hiddenNavbar', !isDarkInicial);
 
 toggleBtn.addEventListener('click', () => {
     const isDark = document.documentElement.classList.toggle('dark');

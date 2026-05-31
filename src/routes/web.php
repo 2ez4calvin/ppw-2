@@ -1,13 +1,13 @@
 <?php
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {    return view('home');
+Route::get('/', function () {return view('home');
 })->name('home');
 
-Route::resource('filmes', MovieController::class)
-        ->middleware('auth');
+Route::resource('generos', GenreController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
