@@ -6,8 +6,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {return view('home');
+Route::get('/', function () {return view('home/index');
 })->name('home');
 
 Route::resource('generos', GenreController::class);
@@ -15,10 +16,11 @@ Route::resource('estudios', StudioController::class);
 Route::resource('pessoas', PersonController::class);
 Route::resource('filmes', MovieController::class);
 Route::resource('reviews', ReviewController::class);
+Route::get('/busca', [HomeController::class, 'busca'])->name('busca.global');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return view('home');
+})->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::get('/admin', function () {

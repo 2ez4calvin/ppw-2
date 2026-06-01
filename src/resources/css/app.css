@@ -391,3 +391,7 @@ h6 {
     box-shadow: var(--shadow-card);
     border: 1px solid var(--bg-elevated);
 }
+
+.btn {
+    white-space: nowrap;
+}

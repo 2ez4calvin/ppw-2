@@ -29,9 +29,9 @@
                         <tr style="border-top: 1px solid var(--bg-elevated); transition: background-color var(--transition);"
                             onmouseover="this.style.backgroundColor='var(--bg-elevated)'"
                             onmouseout="this.style.backgroundColor='transparent'">
-                            <td class="text-muted header-tabela ">{{ $genre->id }}</td>
-                            <td class="header-tabela">{{ $genre->nome }}</td>
-                            <td class="header-tabela text-end">
+                            <td class="text-muted">{{ $genre->id }}</td>
+                            <td class="">{{ $genre->nome }}</td>
+                            <td class="text-end">
                                 <div class="d-flex justify-content-end gap-2">
                                     <a href="{{ route('generos.show', $genre->id) }}" class="btn btn-info btn-sm">
                                         Ver Detalhes

@@ -1,4 +1,4 @@
-<footer class="container-fluid footer mt-auto fixed-bottom align-content-center py-2 d-none d-lg-block">
+<footer class="container-fluid footer w-100 py-3 text-center">
   <div class="container">
     <div class="d-flex flex-wrap justify-content-between align-items-center">
       <p class="text-body-secondary mb-0 h5 fs-6 fs-md-5">IMDp</p>

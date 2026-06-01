@@ -9,6 +9,16 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end " id="navbarSupportedContent">
       <ul class="navbar-nav flex-row flex-wrap gap-3 align-items-center">
+
+        <li>
+          <form class="form-inline d-flex" action="{{ route('busca.global') }}" method="GET">
+            <input class="form-control mr-sm-2" name="termo" value="{{ request('termo') }}" type="search" placeholder="Buscar filmes, produtores, atrizes..." aria-label="Search">
+        </li>
+        <li>
+          <button class="btn" type="submit"><i class="bi bi-search"></i>
+          </button>
+          </form>
+        </li>
         @auth
               <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Início</a>

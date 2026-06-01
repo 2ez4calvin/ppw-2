@@ -12,10 +12,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     @include('partials.header')
 
-    <main>
+    <main class="flex-grow-1">
         @yield('conteudo')
     </main>
 

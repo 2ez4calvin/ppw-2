@@ -4,7 +4,7 @@
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold mb-0">Filmes</h2>
-            <a href="{{ route('filmes.create') }}" class="btn btn-accent">Novo Filme</a>
+            <a href="{{ route('filmes.create') }}" class="btn btn-accent">+ Novo Filme</a>
         </div>
 
         @if(session('sucesso'))
@@ -22,7 +22,7 @@
         @endif
 
         <div class="table-responsive tabela">
-            <table class="table mb-0" style="background-color: var(--bg-surface);">
+            <table class="table mb-0 align-middle" style="background-color: var(--bg-surface);">
                 <thead style="background-color: var(--bg-elevated);">
                     <tr>
                         <th style="width: 80px;">ID</th>
@@ -42,10 +42,21 @@
                             <td>{{ $movie->duracao }} min</td>
                             <td>{{ $movie->studio->nome ?? 'Não informado' }}</td>
                             <td class="text-end">
-                                <div class="d-flex gap-2 justify-content-end">
-                                    <a href="{{ route('filmes.show', $movie->id) }}"
-                                        class="btn btn-sm btn-outline-secondary">Ver</a>
-                                    <a href="{{ route('filmes.edit', $movie->id) }}" class="btn btn-sm btn-info">Editar</a>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{{ route('filmes.show', $movie->id) }}" class="btn btn-info btn-sm">
+                                        Ver Detalhes
+                                    </a>
+                                    <a href="{{ route('filmes.edit', $movie->id) }}" class="btn btn-accent btn-sm">
+                                        Editar
+                                    </a>
+                                    <form action="{{ route('filmes.destroy', $movie->id) }}" method="POST"
+                                          onsubmit="return confirm('Remover o filme \'{{ $movie->nome }}\'?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-remover btn-sm">
+                                            Remover
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
