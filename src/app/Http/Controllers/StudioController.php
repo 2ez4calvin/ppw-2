@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Image;
+use App\Http\Requests\StoreStudioRequest;
+use App\Http\Requests\UpdateStudioRequest;
 
 class StudioController extends Controller
 {
@@ -30,14 +32,8 @@ class StudioController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreStudioRequest $request)
     {
-        $request->validate([
-            'nome' => 'required|string|max:45|unique:studios,nome',
-            'local' => 'required|string|max:45',
-            'imagens' => 'nullable|array',
-            'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
 
         $arquivosSalvos = [];
 
@@ -100,19 +96,10 @@ class StudioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateStudioRequest $request, string $id)
     {
         $studio = Studio::findOrFail($id);
-
-        $request->validate([
-            'nome' => 'required|string|max:45|unique:studios,nome,' . $studio->id,
-            'local' => 'required|string|max:45',
-            'remover_imagens' => 'nullable|array',
-            'remover_imagens.*' => 'exists:images,id', // Verifica se o ID da imagem realmente existe
-            'imagens' => 'nullable|array',
-            'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
-
+        
         $arquivosNovosSalvos = [];
 
         try {

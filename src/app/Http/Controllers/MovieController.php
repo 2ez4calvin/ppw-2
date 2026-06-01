@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreMovieRequest;
+use App\Http\Requests\UpdateMovieRequest;   
 use App\Models\Studio;
 use App\Models\Genre;
 use App\Models\Actor;
@@ -16,6 +18,12 @@ use App\Models\Image;
 
 class MovieController extends Controller
 {
+
+    public function teste(string $id)
+    {
+        $movie = Movie::findOrFail($id);
+        return view('filmes.show_public', compact('movie'));
+    }
     /**
      * Display a listing of the resource.
      */
@@ -33,7 +41,7 @@ class MovieController extends Controller
         $studios = Studio::orderBy('nome')->get();
         $genres = Genre::orderBy('nome')->get();
 
-        // Eager Loading: Trazemos as funções carregando os dados da tabela Person associada
+        // Traz os dados de pessoas processados em memória pra ordenar por nome da pessoa, já que atores, diretores, etc não tem nome direto
         $actors = Actor::with('person')->get()->sortBy('person.nome');
         $directors = Director::with('person')->get()->sortBy('person.nome');
         $writers = Writer::with('person')->get()->sortBy('person.nome');
@@ -45,28 +53,8 @@ class MovieController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreMovieRequest $request)
     {
-        $request->validate([
-            'nome' => 'required|string|max:45',
-            'data_lancamento' => 'required|date',
-            'duracao' => 'required|integer',
-            'sinopse' => 'nullable|string',
-            'classificacao' => 'nullable|string|max:45',
-            'studio_id' => 'required|exists:studios,id',
-            'genres' => 'required|array|min:1',
-            'genres.*' => 'exists:genres,id',
-            'directors' => 'required|array|min:1',
-            'directors.*' => 'exists:directors,id',
-            'actors' => 'nullable|array',
-            'actors.*' => 'exists:actors,id',
-            'writers' => 'nullable|array',
-            'writers.*' => 'exists:writers,id',
-            'producers' => 'nullable|array',
-            'producers.*' => 'exists:producers,id',
-            'imagens' => 'nullable|array',
-            'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
 
         $arquivosNovosSalvos = [];
 
@@ -154,32 +142,9 @@ class MovieController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateMovieRequest $request, string $id)
     {
         $movie = Movie::findOrFail($id);
-        
-        $request->validate([
-            'nome' => 'required|string|max:45',
-            'data_lancamento' => 'required|date|',
-            'duracao' => 'required|integer',
-            'sinopse' => 'nullable|string',
-            'classificacao' => 'nullable|string|max:45',
-            'studio_id' => 'required|exists:studios,id',
-            'genres' => 'required|array|min:1',
-            'genres.*' => 'exists:genres,id',
-            'directors' => 'required|array|min:1',
-            'directors.*' => 'exists:directors,id',
-            'actors' => 'nullable|array',
-            'actors.*' => 'exists:actors,id',
-            'writers' => 'nullable|array',
-            'writers.*' => 'exists:writers,id',
-            'producers' => 'nullable|array',
-            'producers.*' => 'exists:producers,id',
-            'remover_imagens' => 'nullable|array',
-            'remover_imagens.*' => 'exists:images,id',
-            'imagens' => 'nullable|array',
-            'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
 
         $arquivosNovosSalvos = [];
 

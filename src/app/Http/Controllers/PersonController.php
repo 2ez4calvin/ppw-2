@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Image;
+use App\Http\Requests\StorePersonRequest;
+use App\Http\Requests\UpdatePersonRequest;
+
 
 class PersonController extends Controller
 {
@@ -30,20 +33,8 @@ class PersonController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-public function store(Request $request)
+public function store(StorePersonRequest $request)
 {
-    $request->validate([
-        'cpf' => 'required|string|max:14|unique:people,cpf',
-        'nome' => 'required|string|max:255',
-        'data_nascimento' => 'required|date',
-        'biografia' => 'nullable|string',
-        'genero' => 'nullable|string|max:45',
-        'nacionalidade' => 'nullable|string|max:45',
-        'funcoes' => 'required|array|min:1',
-        'funcoes.*' => 'in:ator,diretor,escritor,produtor',
-        'imagens' => 'nullable|array',
-        'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-    ]);
 
     $arquivosNovosSalvos = [];
 
@@ -122,24 +113,9 @@ public function store(Request $request)
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePersonRequest $request, string $id)
 {
     $person = Person::findOrFail($id);
-
-    $request->validate([
-        'cpf' => 'required|string|max:14|unique:people,cpf,' . $person->id,
-        'nome' => 'required|string|max:255',
-        'data_nascimento' => 'required|date',
-        'biografia' => 'nullable|string',
-        'genero' => 'nullable|string|max:45',
-        'nacionalidade' => 'nullable|string|max:45',
-        'funcoes' => 'required|array|min:1',
-        'funcoes.*' => 'in:ator,diretor,escritor,produtor',
-        'remover_imagens' => 'nullable|array', // Validação pro array que vai remover imagens
-        'remover_imagens.*' => 'exists:images,id',
-        'imagens' => 'nullable|array',
-        'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-    ]);
 
     $arquivosNovosSalvos = [];
 
@@ -243,4 +219,30 @@ public function store(Request $request)
             return redirect()->route('pessoas.index')->with('erro', 'Erro ao tentar remover a pessoa.');
         }
     }
+
+    /* public function buscar(Request $request)
+    {
+        $termo = trim($request->input('q', ''));
+        $filmeId = $request->input('filme_id');
+            if (strlen($termo) < 2) {
+            return response()->json([]);
+            }
+            $pessoas = Person::where('nome', 'ilike', "%{$termo}%")
+            ->limit(8)
+            ->get(['id', 'nome']);
+            // Indica quais tipos de vínculo a pessoa já tem no filme
+            return response()->json($pessoas->map(function ($p) use ($filmeId) {
+            $vinculos = [];
+            if ($filmeId) {
+            if ($p->ator?->filmes()->where('filme_id', $filmeId)->exists())
+            $vinculos[] = 'ator';
+            if ($p->diretor?->filmes()->where('filme_id', $filmeId)->exists())
+            $vinculos[] = 'diretor';
+            }
+        return ['id' => $p->id, 'nome' => $p->nome,
+        'foto' => $p->foto_url, 'vinculos' => $vinculos];
+        }));
+        } */
+
+
 }
