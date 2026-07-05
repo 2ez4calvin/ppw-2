@@ -19,6 +19,8 @@ class Actor extends Model
 
     public function movie():BelongsToMany
     {
-        return $this->belongsToMany(Movie::class, 'actor_movies');
+        return $this->belongsToMany(Movie::class, 'actor_movies')
+        ->withPivot('papel')
+        ->withTimestamps();
     }
 }

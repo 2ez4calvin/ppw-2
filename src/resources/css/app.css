@@ -8,7 +8,7 @@
     --bg-surface: #F0ECD9;
     --bg-elevated: #E2DBBF;
 
-    --accent: #B8860B;
+    --accent: #bb9f5a;
     --accent-soft: #D4A017;
     --accent-hover: #9a6f09;
 
@@ -394,4 +394,36 @@ h6 {
 
 .btn {
     white-space: nowrap;
+}
+
+input[type="file"].input-custom {
+    color: var(--text-primary, #e0e0e0);
+    background-color: var(--bg-elevated, #1e1e1e);
+    border: 1px solid var(--border-color, #444);
+}
+
+/* Estiliza o botão "Escolher arquivo" (Chrome, Edge, Safari) */
+input[type="file"].input-custom::file-selector-button {
+    background-color: var(--bg-surface, #2a2a2a);
+    color: var(--text-primary, #e0e0e0);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-right: 12px;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+}
+
+input[type="file"].input-custom::file-selector-button:hover {
+    background-color: var(--bg-elevated-hover, #3a3a3a);
+}
+
+/* Firefox usa um pseudo-elemento diferente */
+input[type="file"].input-custom::-webkit-file-upload-button {
+    background-color: var(--bg-surface, #2a2a2a);
+    color: var(--text-primary, #e0e0e0);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
 }

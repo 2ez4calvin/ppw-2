@@ -18,41 +18,43 @@ class Movie extends Model
         'studio_id'
 
     ];
-    public function actors():BelongsToMany
+    public function actors(): BelongsToMany
     {
-        return $this->belongsToMany(Actor::class, 'actor_movies');
+        return $this->belongsToMany(Actor::class, 'actor_movies')
+            ->withPivot('papel')
+            ->withTimestamps();
     }
 
-    public function directors():BelongsToMany
+    public function directors(): BelongsToMany
     {
         return $this->belongsToMany(Director::class, 'director_movies');
     }
 
-    public function producers():BelongsToMany
+    public function producers(): BelongsToMany
     {
         return $this->belongsToMany(Producer::class, 'producer_movies');
     }
-    public function writers():BelongsToMany
+    public function writers(): BelongsToMany
     {
         return $this->belongsToMany(Writer::class, 'writer_movies');
     }
 
-    public function genres():BelongsToMany
+    public function genres(): BelongsToMany
     {
         return $this->belongsToMany(Genre::class, 'movie_genres');
     }
 
-    public function studio():BelongsTo
+    public function studio(): BelongsTo
     {
         return $this->belongsTo(Studio::class);
     }
 
-    public function images():BelongsToMany
+    public function images(): BelongsToMany
     {
         return $this->belongsToMany(Image::class, 'movie_images');
     }
 
-    public function reviews():HasMany
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }

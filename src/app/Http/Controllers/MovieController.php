@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreMovieRequest;
-use App\Http\Requests\UpdateMovieRequest;   
+use App\Http\Requests\UpdateMovieRequest;
 use App\Models\Studio;
 use App\Models\Genre;
 use App\Models\Actor;
@@ -41,13 +41,7 @@ class MovieController extends Controller
         $studios = Studio::orderBy('nome')->get();
         $genres = Genre::orderBy('nome')->get();
 
-        // Traz os dados de pessoas processados em memória pra ordenar por nome da pessoa, já que atores, diretores, etc não tem nome direto
-        $actors = Actor::with('person')->get()->sortBy('person.nome');
-        $directors = Director::with('person')->get()->sortBy('person.nome');
-        $writers = Writer::with('person')->get()->sortBy('person.nome');
-        $producers = Producer::with('person')->get()->sortBy('person.nome');
-
-        return view('filmes.create', compact('studios', 'genres', 'actors', 'directors', 'writers', 'producers'));
+        return view('filmes.create', compact('studios', 'genres'));
     }
 
     /**
@@ -55,12 +49,11 @@ class MovieController extends Controller
      */
     public function store(StoreMovieRequest $request)
     {
-
         $arquivosNovosSalvos = [];
 
         try {
             DB::transaction(function () use ($request, &$arquivosNovosSalvos) {
-                
+
                 $movie = Movie::create([
                     'nome' => $request->nome,
                     'data_lancamento' => $request->data_lancamento,
@@ -70,51 +63,72 @@ class MovieController extends Controller
                     'studio_id' => $request->studio_id,
                 ]);
 
-                $movie->genres()->sync($request->input('genres'));
-                $movie->directors()->sync($request->input('directors'));
-                $movie->actors()->sync($request->input('actors', []));
-                $movie->writers()->sync($request->input('writers', []));
-                $movie->producers()->sync($request->input('producers', []));
+                $movie->genres()->sync($request->input('genres', []));
+
+                $this->sincronizarVinculos($movie, $request->input('vinculos', []));
 
                 if ($request->hasFile('imagens')) {
                     foreach ($request->file('imagens') as $arquivo) {
-                        
                         $caminho = $arquivo->store('movies', 'public');
                         $arquivosNovosSalvos[] = $caminho;
                         $novaImagem = Image::create([
                             'caminho' => $caminho,
-                            'nome' => $arquivo->getClientOriginalName()
+                            'nome' => $arquivo->getClientOriginalName(),
                         ]);
 
                         $movie->images()->attach($novaImagem->id);
                     }
                 }
             });
-
             return redirect()->route('filmes.index')->with('sucesso', 'Filme e imagens cadastrados com sucesso!');
-
         } catch (\Exception $e) {
-            // Remove arquivos do Storage se houver erro interno de banco
             foreach ($arquivosNovosSalvos as $caminho) {
                 Storage::disk('public')->delete($caminho);
             }
-
             return back()->withInput()->withErrors(['error' => 'Erro ao salvar o filme: ' . $e->getMessage()]);
         }
     }
-
     /**
      * Display the specified resource.
      */
+
+    private function sincronizarVinculos(Movie $movie, array $vinculos): void
+    {
+        foreach ($vinculos as $v) {
+            $personId = $v['person_id'] ?? null;
+            $tipo = $v['tipo'] ?? null;
+            $papel = $v['papel'] ?? null;
+
+            if (!$personId || !$tipo) {
+                continue;
+            }
+
+            match ($tipo) {
+                'ator' => $movie->actors()->syncWithoutDetaching([
+                    Actor::firstOrCreate(['person_id' => $personId])->id => ['papel' => $papel],
+                ]),
+                'diretor' => $movie->directors()->syncWithoutDetaching([
+                    Director::firstOrCreate(['person_id' => $personId])->id,
+                ]),
+                'escritor' => $movie->writers()->syncWithoutDetaching([
+                    Writer::firstOrCreate(['person_id' => $personId])->id,
+                ]),
+                'produtor' => $movie->producers()->syncWithoutDetaching([
+                    Producer::firstOrCreate(['person_id' => $personId])->id,
+                ]),
+                default => null,
+            };
+        }
+    }
     public function show(string $id)
     {
         $movie = Movie::with([
-            'studio', 
-            'genres', 
+            'studio',
+            'genres',
             'images',
-            'actors.person', 
-            'directors.person', 
-            'writers.person', 
+            'actors.person',
+            'directors.person',
+            'writers.person',
             'producers.person'
         ])->findOrFail($id);
 
@@ -127,7 +141,7 @@ class MovieController extends Controller
     public function edit(string $id)
     {
         $movie = Movie::with('images')->findOrFail($id);
-        
+
         $studios = Studio::orderBy('nome')->get();
         $genres = Genre::orderBy('nome')->get();
 
@@ -151,7 +165,7 @@ class MovieController extends Controller
 
         try {
             DB::transaction(function () use ($request, $movie, &$arquivosNovosSalvos) {
-                
+
                 $movie->update([
                     'nome' => $request->nome,
                     'data_lancamento' => $request->data_lancamento,
@@ -182,7 +196,7 @@ class MovieController extends Controller
 
                 if ($request->hasFile('imagens')) {
                     foreach ($request->file('imagens') as $arquivo) {
-                        
+
                         $caminho = $arquivo->store('movies', 'public');
                         $arquivosNovosSalvos[] = $caminho;
 
