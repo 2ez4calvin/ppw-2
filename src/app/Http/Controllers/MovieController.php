@@ -140,17 +140,19 @@ class MovieController extends Controller
      */
     public function edit(string $id)
     {
-        $movie = Movie::with('images')->findOrFail($id);
+        $movie = Movie::with([
+            'images', 
+            'genres',
+            'actors.person', 
+            'directors.person', 
+            'writers.person', 
+            'producers.person'
+        ])->findOrFail($id);
 
         $studios = Studio::orderBy('nome')->get();
         $genres = Genre::orderBy('nome')->get();
 
-        $actors = Actor::with('person')->get()->sortBy('person.nome');
-        $directors = Director::with('person')->get()->sortBy('person.nome');
-        $writers = Writer::with('person')->get()->sortBy('person.nome');
-        $producers = Producer::with('person')->get()->sortBy('person.nome');
-
-        return view('filmes.edit', compact('movie', 'studios', 'genres', 'actors', 'directors', 'writers', 'producers'));
+        return view('filmes.edit', compact('movie', 'studios', 'genres'));
     }
 
     /**
@@ -159,9 +161,7 @@ class MovieController extends Controller
     public function update(UpdateMovieRequest $request, string $id)
     {
         $movie = Movie::findOrFail($id);
-
         $arquivosNovosSalvos = [];
-
 
         try {
             DB::transaction(function () use ($request, $movie, &$arquivosNovosSalvos) {
@@ -175,11 +175,14 @@ class MovieController extends Controller
                     'studio_id' => $request->studio_id,
                 ]);
 
-                $movie->genres()->sync($request->input('genres'));
-                $movie->directors()->sync($request->input('directors'));
-                $movie->actors()->sync($request->input('actors', []));
-                $movie->writers()->sync($request->input('writers', []));
-                $movie->producers()->sync($request->input('producers', []));
+                $movie->genres()->sync($request->input('genres', []));
+                
+                $movie->directors()->detach();
+                $movie->actors()->detach();
+                $movie->writers()->detach();
+                $movie->producers()->detach();
+
+                $this->sincronizarVinculos($movie, $request->input('vinculos', []));
 
                 if ($request->has('remover_imagens') && is_array($request->remover_imagens)) {
                     foreach ($request->remover_imagens as $imageId) {
@@ -196,7 +199,6 @@ class MovieController extends Controller
 
                 if ($request->hasFile('imagens')) {
                     foreach ($request->file('imagens') as $arquivo) {
-
                         $caminho = $arquivo->store('movies', 'public');
                         $arquivosNovosSalvos[] = $caminho;
 
@@ -216,7 +218,6 @@ class MovieController extends Controller
             foreach ($arquivosNovosSalvos as $caminho) {
                 Storage::disk('public')->delete($caminho);
             }
-
             return back()->withInput()->withErrors(['error' => 'Erro ao atualizar o filme. Detalhes: ' . $e->getMessage()]);
         }
     }

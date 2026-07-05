@@ -1,8 +1,6 @@
 <nav class="navbar navbar-expand-sm align-content-center py-3">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="/">IMDp</a>
-
-
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -22,15 +20,6 @@
         @auth
               <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Início</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Filmes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Pessoas</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Gêneros</a>
               </li>
               <li class="nav-item">
                 <div class="dropdown">
