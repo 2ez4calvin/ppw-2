@@ -110,21 +110,22 @@
                             </button>
                         </div>
                     </div>
-                    <hr class="my-4" style="border-color: var(--bg-elevated);">
+                </template>
+                <hr class="my-4" style="border-color: var(--bg-elevated);">
 
-                    <div class="mb-3">
-                        <label for="imagens" class="form-label fw-semibold">Imagens do Filme</label>
-                        <input type="file" id="imagens" name="imagens[]" multiple accept="image/*"
-                            class="form-control input-custom @error('imagens') is-invalid @enderror @error('imagens.*') is-invalid @enderror">
-                        @error('imagens') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        @error('imagens.*') <div class="invalid-feedback">Cada arquivo deve ser uma imagem válida (jpg, png,
-                        webp) de até 2MB.</div> @enderror
-                    </div>
+                <div class="mb-3">
+                    <label for="imagens" class="form-label fw-semibold">Imagens do Filme</label>
+                    <input type="file" id="imagens" name="imagens[]" multiple accept="image/*"
+                        class="form-control input-custom @error('imagens') is-invalid @enderror @error('imagens.*') is-invalid @enderror">
+                    @error('imagens') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    @error('imagens.*') <div class="invalid-feedback">Cada arquivo deve ser uma imagem válida (jpg, png,
+                    webp) de até 2MB.</div> @enderror
+                </div>
 
-                    <div class="d-flex gap-2 justify-content-end mt-4">
-                        <a href="{{ route('filmes.index') }}" class="btn btn-remover">Cancelar</a>
-                        <button type="submit" class="btn btn-accent">Salvar Filme</button>
-                    </div>
+                <div class="d-flex gap-2 justify-content-end mt-4">
+                    <a href="{{ route('filmes.index') }}" class="btn btn-remover">Cancelar</a>
+                    <button type="submit" class="btn btn-accent">Salvar Filme</button>
+                </div>
             </form>
         </div>
     </div>

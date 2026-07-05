@@ -23,24 +23,20 @@ class StoreMovieRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => 'required|string|max:45',
-            'data_lancamento' => 'required|date',
-            'duracao' => 'required|integer',
-            'sinopse' => 'nullable|string',
-            'classificacao' => 'nullable|string|max:45',
-            'studio_id' => 'required|exists:studios,id',
-            'genres' => 'required|array|min:1',
-            'genres.*' => 'exists:genres,id',
-            'directors' => 'required|array|min:1',
-            'directors.*' => 'exists:directors,id',
-            'actors' => 'nullable|array',
-            'actors.*' => 'exists:actors,id',
-            'writers' => 'nullable|array',
-            'writers.*' => 'exists:writers,id',
-            'producers' => 'nullable|array',
-            'producers.*' => 'exists:producers,id',
-            'imagens' => 'nullable|array',
-            'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',  
+            'nome' => ['required', 'string', 'max:255'],
+            'duracao' => ['required', 'integer'],
+            'data_lancamento' => ['required', 'date'],
+            'classificacao' => ['nullable', 'string'],
+            'sinopse' => ['nullable', 'string'],
+            'studio_id' => ['required', 'exists:studios,id'],
+            'genres' => ['required', 'array'],
+            'genres.*' => ['exists:genres,id'],
+            'vinculos' => ['nullable', 'array'],
+            'vinculos.*.person_id' => ['required_with:vinculos.*.tipo', 'exists:people,id'],
+            'vinculos.*.tipo' => ['required_with:vinculos.*.person_id', 'in:ator,diretor,escritor,produtor'],
+            'vinculos.*.papel' => ['nullable', 'string', 'max:255'],
+            'imagens' => ['nullable', 'array'],
+            'imagens.*' => ['image', 'max:2048'],
         ];
     }
 }
