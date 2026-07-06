@@ -38,13 +38,11 @@ class HomeController extends Controller
             ->get();
 
         $recentReviews = [];
-        if (class_exists(\App\Models\Review::class)) {
             $recentReviews = Review::with(['user', 'movie'])
                 ->latest()
                 ->take(4)
                 ->get();
-        }
-
+                
         return view('home/index', compact('carouselMovies', 'movies', 'actors','directors' ,'recentReviews'));
     }
 

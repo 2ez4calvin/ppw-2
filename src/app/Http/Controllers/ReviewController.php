@@ -69,7 +69,7 @@ class ReviewController extends Controller
 
     if ($jaAvaliou) {
         return back()->with('erro_review', 'Você já enviou uma avaliação para este filme! Só é permitida uma por usuário.');
-    }
+     }
 
     try {
         Review::create($request->all());

@@ -93,7 +93,7 @@
                                 <p class="text-muted small text-truncate mb-3" style="font-size: 0.8rem;">
                                     {{ $actor->person->nacionalidade ?? 'Nacionalidade não informada' }}</p>
                                 <a href="{{ route('pessoaPublico', $actor->person->id) }}"
-                                    class="btn btn-sm btn-outline-secondary w-100 rounded">Ver Perfil</a>
+                                    class="btn btn-accent btn-outline-secondary w-100 rounded">Ver Perfil</a>
                             </div>
                         </div>
                     @endif
@@ -121,7 +121,7 @@
                                 <p class="text-muted small text-truncate mb-3" style="font-size: 0.8rem;">
                                     {{ $director->person->nacionalidade ?? 'Nacionalidade não informada' }}</p>
                                 <a href="{{ route('pessoaPublico', $director->person->id) }}"
-                                    class="btn btn-sm btn-outline-secondary w-100 rounded">Ver Perfil</a>
+                                    class="btn btn-accent btn-outline-secondary w-100 rounded">Ver Perfil</a>
                             </div>
                         </div>
                     @endif
