@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Image;
 use App\Http\Requests\StorePersonRequest;
 use App\Http\Requests\UpdatePersonRequest;
+use App\Models\Movie;
 
 
 class PersonController extends Controller
@@ -20,6 +21,19 @@ class PersonController extends Controller
     {
         $person = Person::paginate(8);
         return view('pessoas.index', compact('person'));
+    }
+
+    public function indexPublico(string $id)
+    {
+       $person = Person::with([
+            'image',
+            'actor.movie',
+            'director.movie',
+            'writer.movie',
+            'producer.movie'
+        ])->findOrFail($id);
+
+        return view('pessoas.show_public', compact('person'));
     }
 
     /**
@@ -237,45 +251,44 @@ class PersonController extends Controller
     }
 
     public function buscar(Request $request)
-    {
-        $termo = trim($request->input('q', ''));
-        $movieId = $request->input('movie_id');
+{
+    $termo = trim($request->input('q', ''));
+    $movieId = $request->input('movie_id');
 
-        if (strlen($termo) < 2) {
-            return response()->json([]);
+    if (strlen($termo) < 2) {
+        return response()->json([]);
+    }
+
+    $persons = Person::where('nome', 'ilike', "%{$termo}%")
+        ->limit(8)
+        ->get();
+    $movie = $movieId ? Movie::find($movieId) : null;
+
+    return response()->json($persons->map(function ($person) use ($movie) {
+        $vinculos = [];
+
+        if ($movie) {
+            if ($movie->actors()->whereHas('person', fn($q) => $q->where('people.id', $person->id))->exists()) {
+                $vinculos[] = 'ator';
+            }
+            if ($movie->directors()->whereHas('person', fn($q) => $q->where('people.id', $person->id))->exists()) {
+                $vinculos[] = 'diretor';
+            }
+            if ($movie->writers()->whereHas('person', fn($q) => $q->where('people.id', $person->id))->exists()) {
+                $vinculos[] = 'escritor';
+            }
+            if ($movie->producers()->whereHas('person', fn($q) => $q->where('people.id', $person->id))->exists()) {
+                $vinculos[] = 'produtor';
+            }
         }
 
-        $persons = Person::where('nome', 'ilike', "%{$termo}%")
-            ->limit(8)
-            ->get();
-
-        $movie = $movieId ? Movie::find($movieId) : null;
-
-        return response()->json($persons->map(function ($person) use ($movie) {
-            $vinculos = [];
-
-            if ($movie) {
-                if ($movie->actors()->whereHas('person', fn($q) => $q->where('people.id', $person->id))->exists()) {
-                    $vinculos[] = 'ator';
-                }
-                if ($movie->directors()->whereHas('person', fn($q) => $q->where('people.id', $person->id))->exists()) {
-                    $vinculos[] = 'diretor';
-                }
-                if ($movie->writers()->whereHas('person', fn($q) => $q->where('people.id', $person->id))->exists()) {
-                    $vinculos[] = 'escritor';
-                }
-                if ($movie->producers()->whereHas('person', fn($q) => $q->where('people.id', $person->id))->exists()) {
-                    $vinculos[] = 'produtor';
-                }
-            }
-
-            return [
-                'id' => $person->id,
-                'nome' => $person->nome,
-                'vinculos' => $vinculos,
-            ];
-        }));
-    }
+        return [
+            'id' => $person->id,
+            'nome' => $person->nome,
+            'vinculos' => $vinculos,
+        ];
+    }));
+}
 
 
 }

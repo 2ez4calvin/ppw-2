@@ -19,7 +19,7 @@ use App\Models\Image;
 class MovieController extends Controller
 {
 
-    public function teste(string $id)
+    public function indexPublico(string $id)
     {
         $movie = Movie::findOrFail($id);
         return view('filmes.show_public', compact('movie'));

@@ -40,6 +40,4 @@ class Person extends Model
     {
         return $this->belongsToMany(Image::class, 'person_images');
     }
-
-
 }
