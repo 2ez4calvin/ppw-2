@@ -23,7 +23,7 @@ class HomeController extends Controller
             ->get();
 
         $movies = Movie::with('images')
-            ->latest()
+            ->inRandomOrder()
             ->take(4)
             ->get();
 
