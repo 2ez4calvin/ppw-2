@@ -15,7 +15,7 @@ Route::get('/', function () {
 Route::get('/busca', [HomeController::class, 'busca'])->name('busca.global');
 Route::get('/filmes/{id}/avaliacoes', [ReviewController::class, 'publicIndex']);
 Route::get('/filmes/{id}', [MovieController::class, 'indexPublico'])->name('filmePublico');
-Route::get('/pessoas/{id}', [PersonController::class, 'indexPublico']);
+Route::get('/pessoas/{id}', [PersonController::class, 'indexPublico'])->name('pessoaPublico');
 
 Route::get('/persons/buscar', [PersonController::class, 'buscar'])
     ->middleware('auth')

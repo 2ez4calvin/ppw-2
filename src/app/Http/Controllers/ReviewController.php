@@ -20,22 +20,26 @@ class ReviewController extends Controller
     }
 
     public function publicIndex(string $filmeId)
-        {
-        $avaliacoes = Review::with('user')
+{
+    
+    $usuarioLogadoId = auth()->id(); 
+
+    $avaliacoes = Review::with('user')
         ->where('movie_id', $filmeId)
+        ->orderByRaw("CASE WHEN user_id = ? THEN 0 ELSE 1 END ASC", [$usuarioLogadoId])
         ->orderBy('created_at', 'desc')
-        ->paginate(1);
-        // Se for requisição AJAX (Accept: application/json), retorna JSON
-        // O paginator serializa automaticamente para JSON com metadados
-        return response()->json([
+        ->paginate(4);
+
+    return response()->json([
         'data' => $avaliacoes->items(),
         'current_page' => $avaliacoes->currentPage(),
         'last_page' => $avaliacoes->lastPage(),
         'total' => $avaliacoes->total(),
         'next_page_url' => $avaliacoes->nextPageUrl(),
         'prev_page_url' => $avaliacoes->previousPageUrl(),
-        ]);
-        }
+        'usuario_logado_id' => $usuarioLogadoId,
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -44,39 +48,36 @@ class ReviewController extends Controller
     {
         $movies = Movie::orderBy('nome')->get();
         $users = User::orderBy('name')->get(); // Ou 'nome' dependendo da sua tabela users
-        return view('reviews.create', compact('movies', 'users'));
+        return view('reviews.create', compact('filmePublico', 'users'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        {
-        $request->validate([
-            'movie_id' => 'required|exists:movies,id',
-            'user_id' => 'required|exists:users,id',
-            'nota' => 'required|integer|min:1|max:5',
-            'descricao' => 'nullable|string',
-        ]);
+{
+    $request->validate([
+        'movie_id' => 'required|exists:movies,id',
+        'user_id' => 'required|exists:users,id',
+        'nota' => 'required|integer|min:1|max:5',
+        'descricao' => 'nullable|string',
+    ]);
 
-        try {
-            $jaExiste = Review::where('user_id', $request->user_id)
-                              ->where('movie_id', $request->movie_id)
-                              ->exists();
+    $jaAvaliou = Review::where('movie_id', $request->movie_id)
+                       ->where('user_id', $request->user_id)
+                       ->exists();
 
-            if ($jaExiste) {
-                return back()->withInput()->withErrors(['error' => 'Este usuário já fez uma avaliação para este filme!']);
-            }
-
-            Review::create($request->all());
-
-            return redirect()->route('reviews.index')->with('sucesso', 'Review cadastrada com sucesso!');
-        } catch (\Exception $e) {
-            return back()->withInput()->withErrors(['error' => 'Erro ao salvar review: ' . $e->getMessage()]);
-        }
+    if ($jaAvaliou) {
+        return back()->with('erro_review', 'Você já enviou uma avaliação para este filme! Só é permitida uma por usuário.');
     }
+
+    try {
+        Review::create($request->all());
+        return back()->with('sucesso', 'Sua avaliação foi enviada com sucesso!');
+    } catch (\Exception $e) {
+        return back()->withInput()->withErrors(['error' => 'Erro ao salvar avaliação: ' . $e->getMessage()]);
     }
+}
 
     /**
      * Display the specified resource.
@@ -127,11 +128,23 @@ class ReviewController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-        {
-        $review = Review::findOrFail($id);
-        $review->delete();
-        return redirect()->route('reviews.index')->with('sucesso', 'Review removida!');
+{
+    $review = Review::findOrFail($id);
+    $usuarioLogadoId = auth()->id();
+
+    if ($review->user_id != $usuarioLogadoId) {
+        if (request()->wantsJson()) {
+            return response()->json(['erro' => 'Você não tem permissão para excluir esta avaliação.'], 403);
+        }
+        return back()->with('erro_review', 'Você não tem permissão para excluir esta avaliação.');
     }
+
+    $review->delete();
+
+    if (request()->wantsJson()) {
+        return response()->json(['sucesso' => 'Sua avaliação foi removida com sucesso!']);
     }
+
+    return back()->with('sucesso', 'Avaliação excluída com sucesso!');
+}
 }

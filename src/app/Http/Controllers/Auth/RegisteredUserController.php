@@ -42,7 +42,6 @@ class RegisteredUserController extends Controller
         $caminho = null;
 
         if ($request->hasFile('avatar')) {
-            // Salva no disco 'public' com nome aleatório para evitar colisões
             $caminho = $request->file('avatar')->store('avatars', 'public'); 
         }
 
@@ -68,6 +67,6 @@ class RegisteredUserController extends Controller
             return back()->withInput()->withErrors(['avatar' => 'Erro ao salvar o usuário. Tente novamente.']);
         }
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('home', absolute: false));
     }
 }

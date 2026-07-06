@@ -143,7 +143,7 @@
                         <ul class="list-group list-group-flush lista-publico">
                             @foreach($person->producer->movie as $movie)
                                 <li class="list-group-item lista-publico px-0 py-2">
-                                    <a href="{{ route('movies.show', $movie->id) }}" class="text-decoration-none fw-bold"
+                                    <a href="{{ route('filmePublico', $movie->id) }}" class="text-decoration-none fw-bold"
                                         style="color: var(--text-primary);">
                                         {{ $movie->nome }}
                                     </a>
