@@ -32,6 +32,11 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
+        $directors = Director::with('person.image')
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+
         $recentReviews = [];
         if (class_exists(\App\Models\Review::class)) {
             $recentReviews = Review::with(['user', 'movie'])
@@ -40,7 +45,7 @@ class HomeController extends Controller
                 ->get();
         }
 
-        return view('home/index', compact('carouselMovies', 'movies', 'actors', 'recentReviews'));
+        return view('home/index', compact('carouselMovies', 'movies', 'actors','directors' ,'recentReviews'));
     }
 
     public function busca(Request $request)

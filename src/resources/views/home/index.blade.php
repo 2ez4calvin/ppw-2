@@ -100,6 +100,34 @@
                 @endforeach
             </div>
         @endif
+        @if(isset($directors) && $directors->isNotEmpty())
+            <h4 class="fw-bold mb-3 mt-5">Diretores e Diretoras</h4>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-5">
+                @foreach($directors as $director)
+                    @if($director->person)
+                        <div class="col">
+                            <div class="card h-100 border-0 shadow-sm p-3 text-center div-demonstracao">
+                                <div class="mx-auto mb-3 rounded-circle overflow-hidden shadow-sm border"
+                                    style="width: 100px; height: 100px;">
+                                    @if($director->person->image && $director->person->image->isNotEmpty())
+                                        <img src="{{ asset('storage/' . $director->person->image->first()->caminho) }}"
+                                            alt="{{ $director->person->nome }}" class="w-100 h-100 object-fit-cover">
+                                    @else
+                                        <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted small">Foto
+                                        </div>
+                                    @endif
+                                </div>
+                                <h6 class="fw-bold mb-1 text-truncate">{{ $director->person->nome }}</h6>
+                                <p class="text-muted small text-truncate mb-3" style="font-size: 0.8rem;">
+                                    {{ $director->person->nacionalidade ?? 'Nacionalidade não informada' }}</p>
+                                <a href="{{ route('pessoaPublico', $director->person->id) }}"
+                                    class="btn btn-sm btn-outline-secondary w-100 rounded">Ver Perfil</a>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        @endif
         @if(isset($recentReviews) && $recentReviews->isNotEmpty())
             <h4 class="fw-bold mb-3 mt-5">Avaliações Recentes dos Usuários</h4>
             <div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
