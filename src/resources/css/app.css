@@ -7,6 +7,8 @@
     --bg-base: #FAF8F2;
     --bg-surface: #F0ECD9;
     --bg-elevated: #E2DBBF;
+    --Background: rgba(255, 255, 255, 0.6);
+
 
     --accent: #bb9f5a;
     --accent-soft: #D4A017;
@@ -61,6 +63,7 @@ html.dark {
     --bg-surface: #1A1A20;
     --bg-elevated: #26262E;
 
+    --Background: rgba(0, 0, 0, 0.6);
     --accent: #E6B84A;
     --accent-soft: #F0D080;
     --accent-hover: #f5c84e;
@@ -435,17 +438,17 @@ input[type="file"].input-custom::-webkit-file-upload-button {
     border: 1px solid var(--bg-elevated) !important;
 }
 
-.lista-publico{
+.lista-publico {
     background-color: --var(--bg-elevated) !important;
     color: var(--text-primary) !important;
 }
 
 .carousel-caption {
-  left: 50% !important;
-  right: auto !important;
-  transform: translateX(-50%);
-  text-align: center;
-  max-width: 500px;
-  background: rgba(255, 255, 255, 0.6); 
-  max-width: 500px;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%);
+    text-align: center;
+    background-color: var(--Background);
+    max-width: 500px;
+    color: var(--text-primary);
 }
