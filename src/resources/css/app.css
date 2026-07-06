@@ -438,5 +438,14 @@ input[type="file"].input-custom::-webkit-file-upload-button {
 .lista-publico{
     background-color: --var(--bg-elevated) !important;
     color: var(--text-primary) !important;
+}
 
+.carousel-caption {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%);
+  text-align: center;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.6); 
+  max-width: 500px;
 }

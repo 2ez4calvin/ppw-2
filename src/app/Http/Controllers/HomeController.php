@@ -8,9 +8,41 @@ use App\Models\Actor;
 use App\Models\Director;
 use App\Models\Writer;
 use App\Models\Studio;
+use App\Models\Review; // Importe o model de Avaliações/Reviews (ajuste o nome se for diferente)
 
 class HomeController extends Controller
 {
+    /**
+     * .
+     */
+    public function index()
+    {
+        $carouselMovies = Movie::with('images')
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
+
+        $movies = Movie::with('images')
+            ->latest()
+            ->take(4)
+            ->get();
+
+        $actors = Actor::with('person.image')
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+
+        $recentReviews = [];
+        if (class_exists(\App\Models\Review::class)) {
+            $recentReviews = Review::with(['user', 'movie'])
+                ->latest()
+                ->take(4)
+                ->get();
+        }
+
+        return view('home/index', compact('carouselMovies', 'movies', 'actors', 'recentReviews'));
+    }
+
     public function busca(Request $request)
     {
         $termo = trim($request->input('termo', ''));
@@ -48,4 +80,3 @@ class HomeController extends Controller
         return view('home.busca', compact('movies', 'actors', 'directors', 'writers', 'studios', 'termo'));
     }
 }
-
